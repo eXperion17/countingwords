@@ -46,7 +46,8 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 					// In case the input ends with a letter, we add 1 to the index so it grabs the last word correctly
 					i++;
 				}
-			} 
+			} else if (charSinceLastWord == 0)
+				continue;
 			
 			// Using substring to extract the word, by keeping track of when 
 			String word = text.substring(i-charSinceLastWord, i);
