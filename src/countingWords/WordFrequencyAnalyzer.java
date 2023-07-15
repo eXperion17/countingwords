@@ -11,16 +11,21 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 	private List<WordFrequency> recentWordFrequency;
 	
 
-	// TODO: See about using regex and \s to quickly find and separate words
-	// TODO: Using multiple spaces between words freaks it out, still need to fix that too. My fix for the end of the sentence is the likely reason for that.
-	// TODO: Once this is fully functional, move onto a separate method that the three other methods use to help return the values.
-	// TODO: Not to forget, to use the class's variables to prevent any redundant calculations if the new input matches the previous output
+	// TODO: See about using regex and \s to quickly find and separate words. Perhaps this'll let me remove the whitespaces
 	// TODO: Refactor the interfaces (and how they're structured vs classes that rely on them) to industry-levels
 	// TODO: Look into test cases, perhaps even a 3rd party framework as the assignment mentioned
 	
 
 	public WordFrequencyAnalyzer() {
-		calculateHighestFrequency("This is just a sentence.");
+		//calculateHighestFrequency("This should have about two entries because this is being used twice.");
+		
+
+
+		//System.out.println(calculateHighestFrequency("This this this how how hello boom"));
+
+		System.out.println(calculateMostFrequentNWords("This this this how how hello boom this", 4));
+		
+		
 	}
 	
 	private boolean processInput(String text) {
@@ -85,14 +90,16 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 				// Declare the most recently processed input and output
 				recentAnalyzedInput = text;
 				recentWordFrequency = wordsFound;
-				
+
+				System.out.println("\n Input processed \n");
 				return true;
 	}
 	
 	private int findWordIn(List<WordFrequency> wordFreq, String word) {
 		for (int i = 0; i < wordFreq.size(); i++) {
+			//if (wordFreq.get(i).getWord() == word) {
 			
-			if (wordFreq.get(i).getWord() == word) {
+			if (word.compareTo(wordFreq.get(i).getWord()) == 0) {
 				return i;
 			}
 			
@@ -145,7 +152,7 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 
 		List<IWordFrequency> mostFrequent = new ArrayList<IWordFrequency>();
 		for (int i = 0; i < n; i++) {
-			WordFrequency wordToAdd = recentWordFrequency.get(recentWordFrequency.size() - i);
+			WordFrequency wordToAdd = recentWordFrequency.get(recentWordFrequency.size() - i-1);
 			
 			mostFrequent.add(wordToAdd);
 		}

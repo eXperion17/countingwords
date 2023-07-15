@@ -1,6 +1,6 @@
 package countingWords;
 
-public class WordFrequency implements IWordFrequency, Comparable<WordFrequency> {
+public class WordFrequency implements IWordFrequency {
 	private String word;
 	private int frequency;
 	
