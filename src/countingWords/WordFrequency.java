@@ -8,7 +8,8 @@ public class WordFrequency implements IWordFrequency {
 		this.word = word;
 		this.frequency = frequency;
 	}
-	
+
+	@Override
 	public void addFrequency() {
 		frequency++;
 	}

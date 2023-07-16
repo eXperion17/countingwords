@@ -8,12 +8,11 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 	
 	// Storing the most recent input and results to prevent redundancy
 	private String recentAnalyzedInput;
-	private List<WordFrequency> recentWordFrequency;
+	private List<IWordFrequency> recentWordFrequency;
 
 	public WordFrequencyAnalyzer() {
-		//calculateHighestFrequency("This should have about two entries because this is being used twice.");
-		//System.out.println(calculateHighestFrequency("This this this how how hello boom"));
-		//System.out.println(calculateMostFrequentNWords("This this this how how hello boom this", 4));
+		// Write any tests here
+		
 	}
 	
 	
@@ -26,7 +25,7 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 		}
 		
 		
-		//Check if the text is identical, if it is we just use what we've already processed
+		// Check if the text is identical, if it is we just use what we've already processed
 		if (text != recentAnalyzedInput) {
 			processInput(text);			
 		}
@@ -36,6 +35,7 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 		int highestFrequency = 0;
 		for (int i = 0; i < recentWordFrequency.size(); i++)  {
 			if (recentWordFrequency.get(i).getFrequency() > highestFrequency) {
+				// Simply check if the currently recorded frequency is lower than the word we're currently checking
 				highestFrequency = recentWordFrequency.get(i).getFrequency();
 			}
 		}
@@ -51,7 +51,7 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 			return -1;
 		}
 		
-		//Check if the text is identical, if it is we just use what we've already processed
+		// Check if the text is identical, if it is we just use what we've already processed
 		if (text != recentAnalyzedInput) {
 			processInput(text);			
 		}
@@ -59,7 +59,7 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 		
 		// Find the WordFrequency of the word, before returning the actual frequency of it
 		word = word.toLowerCase();
-		var wordFreq = recentWordFrequency.get(findWordIn(recentWordFrequency, word));
+		IWordFrequency wordFreq = recentWordFrequency.get(findWordIn(recentWordFrequency, word));
 		
 		return wordFreq.getFrequency();
 	}
@@ -72,12 +72,12 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 			return null;
 		}
 		
-		//Check if the text is identical, if it is we just use what we've already processed
+		// Check if the text is identical, if it is we just use what we've already processed
 		if (text != recentAnalyzedInput) {
 			processInput(text);			
 		}
 		
-
+		// Sort the collection using a custom Comparator
 		Collections.sort(recentWordFrequency, new WordFrequencyCompare());
 
 		List<IWordFrequency> mostFrequent = new ArrayList<IWordFrequency>();
@@ -87,7 +87,7 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 				break;
 			}
 				
-			WordFrequency wordToAdd = recentWordFrequency.get(recentWordFrequency.size() - i-1);
+			IWordFrequency wordToAdd = recentWordFrequency.get(recentWordFrequency.size() - i-1);
 			
 			mostFrequent.add(wordToAdd);
 		}
@@ -109,13 +109,12 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 				// Convert all to lower case,
 				text = text.toLowerCase();
 				
-				//Declare internal/temporary* variable to use within the loop and to document the words
+				// Declare variable to use within the loop and to document the words
 				int charSinceLastWord = 0;
-				List<WordFrequency> wordsFound = new ArrayList<WordFrequency>();
+				List<IWordFrequency> wordsFound = new ArrayList<IWordFrequency>();
 				
-				//Loop through every character of the input
+				// Loop through every character of the input
 				for (int i = 0; i < text.length(); i++)  {
-					// Declare char variable, easy reference 
 					char currLetter = text.charAt(i);
 					
 					// Is the char part of a word, or a separator?
@@ -148,11 +147,10 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 						wordsFound.add(wordFreq);
 						
 					} else {
-						//We tell the WordFrequency to add one onto its frequency
+						// We tell the WordFrequency to add one onto its frequency
 						wordsFound.get(indexOfFreq).addFrequency();
 					}
 					
-					//wordsFound.add(word);
 					System.out.println(word);
 						
 					charSinceLastWord = 0;
@@ -166,16 +164,12 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 				return true;
 	}
 	
-	private int findWordIn(List<WordFrequency> wordFreq, String word) {
-		for (int i = 0; i < wordFreq.size(); i++) {
-			//if (wordFreq.get(i).getWord() == word) {
-			
+	private int findWordIn(List<IWordFrequency> wordFreq, String word) {
+		for (int i = 0; i < wordFreq.size(); i++) {			
 			if (word.compareTo(wordFreq.get(i).getWord()) == 0) {
 				return i;
 			}
-			
 		}
-		
 		return -1;
 	}
 	
