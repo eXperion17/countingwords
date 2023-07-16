@@ -9,24 +9,95 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 	// Storing the most recent input and results to prevent redundancy
 	private String recentAnalyzedInput;
 	private List<WordFrequency> recentWordFrequency;
-	
-
-	// TODO: See about using regex and \s to quickly find and separate words. Perhaps this'll let me remove the whitespaces
-	// TODO: Refactor the interfaces (and how they're structured vs classes that rely on them) to industry-levels
-	// TODO: Look into test cases, perhaps even a 3rd party framework as the assignment mentioned
-	
 
 	public WordFrequencyAnalyzer() {
 		//calculateHighestFrequency("This should have about two entries because this is being used twice.");
-		
-
-
 		//System.out.println(calculateHighestFrequency("This this this how how hello boom"));
-
-		System.out.println(calculateMostFrequentNWords("This this this how how hello boom this", 4));
-		
-		
+		//System.out.println(calculateMostFrequentNWords("This this this how how hello boom this", 4));
 	}
+	
+	
+	
+	@Override
+	public int calculateHighestFrequency(String text) {
+		if (text == null || text.isBlank()) {
+			System.out.println("ERROR: Couldn't calculate highest frequency with no input text. Returning -1.");
+			return -1;
+		}
+		
+		
+		//Check if the text is identical, if it is we just use what we've already processed
+		if (text != recentAnalyzedInput) {
+			processInput(text);			
+		}
+		
+		
+		
+		int highestFrequency = 0;
+		for (int i = 0; i < recentWordFrequency.size(); i++)  {
+			if (recentWordFrequency.get(i).getFrequency() > highestFrequency) {
+				highestFrequency = recentWordFrequency.get(i).getFrequency();
+			}
+		}
+		
+		return highestFrequency;
+	}
+
+	@Override
+	public int calculateFrequencyForWord(String text, String word) {
+		// Returning errors for edge cases
+		if (text == null || text.isBlank() || word == null || word.equalsIgnoreCase("")) {
+			System.out.println("ERROR: Couldn't calculate highest frequency with no input text or word. Returning -1.");
+			return -1;
+		}
+		
+		//Check if the text is identical, if it is we just use what we've already processed
+		if (text != recentAnalyzedInput) {
+			processInput(text);			
+		}
+		
+		
+		// Find the WordFrequency of the word, before returning the actual frequency of it
+		word = word.toLowerCase();
+		var wordFreq = recentWordFrequency.get(findWordIn(recentWordFrequency, word));
+		
+		return wordFreq.getFrequency();
+	}
+
+	@Override
+	public List<IWordFrequency> calculateMostFrequentNWords(String text, int n) {
+		// Returning errors for edge cases
+		if (text == null || text.isBlank() || n < 0) {
+			System.out.println("ERROR: Couldn't calculate highest frequency with no input text or word. Returning null.");
+			return null;
+		}
+		
+		//Check if the text is identical, if it is we just use what we've already processed
+		if (text != recentAnalyzedInput) {
+			processInput(text);			
+		}
+		
+
+		Collections.sort(recentWordFrequency, new WordFrequencyCompare());
+
+		List<IWordFrequency> mostFrequent = new ArrayList<IWordFrequency>();
+		for (int i = 0; i < n; i++) {
+			// If the input words ended up higher, we just end it here.
+			if (i == recentWordFrequency.size()) {
+				break;
+			}
+				
+			WordFrequency wordToAdd = recentWordFrequency.get(recentWordFrequency.size() - i-1);
+			
+			mostFrequent.add(wordToAdd);
+		}
+
+		return mostFrequent;
+	}
+	
+
+	///////////////////////////////////////////////
+	
 	
 	private boolean processInput(String text) {
 		// Check to see if the input is legitimate
@@ -108,60 +179,6 @@ public class WordFrequencyAnalyzer implements IWordFrequencyAnalyzer {
 		return -1;
 	}
 	
-	
-	@Override
-	public int calculateHighestFrequency(String text) {
-		//First check if the text is identical
-		if (text != recentAnalyzedInput) {
-			processInput(text);			
-		}
-		
-		
-		
-		int highestFrequency = 0;
-		for (int i = 0; i < recentWordFrequency.size(); i++)  {
-			if (recentWordFrequency.get(i).getFrequency() > highestFrequency) {
-				highestFrequency = recentWordFrequency.get(i).getFrequency();
-			}
-		}
-		
-		return highestFrequency;
-	}
-
-	@Override
-	public int calculateFrequencyForWord(String text, String word) {
-		//First check if the text is identical
-		if (text != recentAnalyzedInput) {
-			processInput(text);			
-		}
-		
-		// Find the WordFrequency of the word, before returning the actual frequency of it
-		var wordFreq = recentWordFrequency.get(findWordIn(recentWordFrequency, word));
-		return wordFreq.getFrequency();
-	}
-
-	@Override
-	public List<IWordFrequency> calculateMostFrequentNWords(String text, int n) {
-		//First check if the text is identical
-		if (text != recentAnalyzedInput) {
-			processInput(text);			
-		}
-		
-
-		Collections.sort(recentWordFrequency, new WordFrequencyCompare());
-
-		List<IWordFrequency> mostFrequent = new ArrayList<IWordFrequency>();
-		for (int i = 0; i < n; i++) {
-			WordFrequency wordToAdd = recentWordFrequency.get(recentWordFrequency.size() - i-1);
-			
-			mostFrequent.add(wordToAdd);
-		}
-
-		return mostFrequent;
-	}
-	
-	
-	///////////////////////////////////////////////
 	
 	private boolean isCharALetter(char input) {
 		// Simply checking whether the input fits within the range, as its a numerical value
